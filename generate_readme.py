@@ -38,9 +38,9 @@ for problem_folder in sorted(root_dir.iterdir()):
         lang_str = ", ".join(languages) if languages else "—"
         index_entries.append(f"| [{problem_folder.name}](./challenges/{problem_folder.name}) | {lang_str} | {source} |")
 
-readme_content = f"""# 🧠 Coding Challenge Solutions Repository
+readme_content = f"""# 🧠 Coding Challenge Encyclopedia
 
-Centralized solutions to coding challenges from LeetCode, HackerRank, and job interviews.  
+Centralized solutions to coding challenges from LeetCode, HackerRank, job interviews, and other sources.  
 Organized by **problem name**, with multiple languages supported.
 
 
@@ -63,8 +63,9 @@ Each folder contains:
 
 ## ✍️ License
 
-MIT License
+[./LICENSE.txt](MIT License)
 """
 
 readme_path.write_text(readme_content)
-print("✅ README.md updated.")
+
+print("README.md updated.")
