@@ -28,7 +28,7 @@ def detect_languages(folder_path):
 
 index_entries = []
 
-for problem_folder in sorted(root_dir.iterdir()):
+for problem_folder in sorted(root_dir.iterdir(), key=lambda p: p.name.lower()):
     if problem_folder.is_dir():
         meta = {}
         meta_file = problem_folder / "meta.json"
