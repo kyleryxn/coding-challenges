@@ -1,11 +1,5 @@
 ## 4. Median of Two Sorted Arrays
 
-**Difficulty:** Hard  
-**Status:** ✅ Solved  
-**Acceptance:** 43.9% (3,465,332 / 7.9M)
-
----
-
 ### Problem
 
 Given two sorted arrays `nums1` and `nums2` of size `m` and `n` respectively, return **the median** of the two sorted arrays.
