@@ -41,7 +41,7 @@ for problem_folder in sorted(root_dir.iterdir()):
 readme_content = f"""# 🧠 Coding Challenge Encyclopedia
 
 Centralized solutions to coding challenges from LeetCode, HackerRank, job interviews, and other sources.  
-Organized by **problem name**, with multiple languages supported.
+Organized by **problem name**, with **multiple languages supported**.
 
 
 ## 📁 Structure
@@ -63,7 +63,7 @@ Each folder contains:
 
 ## ✍️ License
 
-[LICENSE](./LICENSE.txt)
+[MIT LICENSE](./LICENSE.txt)
 """
 
 readme_path.write_text(readme_content)
