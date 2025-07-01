@@ -36,7 +36,7 @@ for problem_folder in sorted(root_dir.iterdir()):
         source = meta.get("source", "Unknown")
         languages = detect_languages(problem_folder)
         lang_str = ", ".join(languages) if languages else "—"
-        index_entries.append(f"| [{problem_folder.name}](./coding-challenges/{problem_folder.name}) | {lang_str} | {source} |")
+        index_entries.append(f"| [{problem_folder.name}](./challenges/{problem_folder.name}) | {lang_str} | {source} |")
 
 readme_content = f"""# 🧠 Coding Challenge Solutions Repository
 
