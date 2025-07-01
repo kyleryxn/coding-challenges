@@ -1,6 +1,6 @@
-# 🧠 Coding Challenge Solutions Repository
+# 🧠 Coding Challenge Encyclopedia
 
-Centralized solutions to coding challenges from LeetCode, HackerRank, and job interviews.  
+Centralized solutions to coding challenges from LeetCode, HackerRank, job interviews, and other sources.  
 Organized by **problem name**, with multiple languages supported.
 
 
@@ -24,4 +24,4 @@ Each folder contains:
 
 ## ✍️ License
 
-MIT License
+[./LICENSE.txt](MIT License)
