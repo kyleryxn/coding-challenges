@@ -29,7 +29,6 @@ TwoSum/
 | Problem | Languages | Source(s) |
 |---------|-----------|-----------|
 | [Two Sum](./challenges/two-sum/) | Java, Python, C++ | LeetCode |
-| [Median of Two Sorted Arrays](./challenges/median-two-sorted-arrays/) | Java, Python | LeetCode |
 
 > 🛠️ *This table is manually maintained (for now). Future improvement: Auto-generate it via a script.*
 
