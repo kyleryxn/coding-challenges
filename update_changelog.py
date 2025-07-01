@@ -18,7 +18,7 @@ if not relevant_files:
 
 # Load or initialize the changelog
 if not changelog_path.exists():
-    changelog_path.write_text("# 📋 Changelog\n\nAll notable changes to this project will be documented in this file.\n"
+    changelog_path.write_text("#Changelog\n\nAll notable changes to this project will be documented in this file.\n"
     "\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).")
 
 content = changelog_path.read_text()
@@ -46,4 +46,4 @@ for file in relevant_files:
 
 # Rewrite the changelog
 changelog_path.write_text("\n".join(lines) + "\n")
-print("✅ CHANGELOG.md updated using Keep a Changelog format.")
+print("CHANGELOG.md updated using Keep a Changelog format.")
