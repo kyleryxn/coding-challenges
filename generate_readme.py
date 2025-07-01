@@ -63,7 +63,7 @@ Each folder contains:
 
 ## ✍️ License
 
-[./LICENSE.txt](MIT License)
+[LICENSE](./LICENSE.txt)
 """
 
 readme_path.write_text(readme_content)
