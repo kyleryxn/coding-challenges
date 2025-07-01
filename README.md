@@ -1,7 +1,7 @@
 # 🧠 Coding Challenge Encyclopedia
 
 Centralized solutions to coding challenges from LeetCode, HackerRank, job interviews, and other sources.  
-Organized by **problem name**, with multiple languages supported.
+Organized by **problem name**, with **multiple languages supported**.
 
 
 ## 📁 Structure
@@ -24,4 +24,4 @@ Each folder contains:
 
 ## ✍️ License
 
-[LICENSE](./LICENSE.txt)
+[MIT LICENSE](./LICENSE.txt)
