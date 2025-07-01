@@ -1,8 +1,11 @@
 import json
 from pathlib import Path
 
-root_dir = Path("coding-challenges")
+root_dir = Path("challenges")
 readme_path = Path("README.md")
+
+if not root_dir.exists():
+    raise FileNotFoundError(f"Expected folder '{root_dir}/' not found in the repo root.")
 
 EXTENSION_LANG_MAP = {
     ".py": "Python",
