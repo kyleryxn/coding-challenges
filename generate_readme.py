@@ -41,7 +41,7 @@ for problem_folder in sorted(root_dir.iterdir()):
         languages = detect_languages(problem_folder)
         lang_str = ", ".join(languages) if languages else "—"
         topics = meta.get("topics", "Unknown")
-        topics_str = ", ".join(topics) if topics else "—"
+        topics_str = ", ".join(topics)
 
         index_entries.append(f"| [{problem_folder.name}](./challenges/{problem_folder.name}) | {lang_str} | {source} | {topics_str}")
 
