@@ -1,4 +1,5 @@
 {
     "source": "LeetCode",
-    "difficulty": "Hard"
+    "difficulty": "Hard",
+    "topics": ["Array", "Binary Search", "Divide and Conquer"]
 }
