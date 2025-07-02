@@ -34,19 +34,19 @@ def write_changelog(version: str, date: str, changes: dict, mode: str = "unrelea
 
     body.append("")
 
-# Preserve the header and any pre-existing entries
-header_end_index = 0
-for i, line in enumerate(existing_lines):
-    if line.startswith("## "):
-        header_end_index = i
-        break
+    # Preserve the header and any pre-existing entries
+    header_end_index = 0
+    for i, line in enumerate(existing_lines):
+        if line.startswith("## "):
+            header_end_index = i
+            break
 
-preserved_header = existing_lines[:header_end_index]
-remaining_log = [
-    line for line in existing_lines[header_end_index:]
-    if not line.startswith(f"## [{version}]") and line != "## [Unreleased]"
-]
+    preserved_header = existing_lines[:header_end_index]
+    remaining_log = [
+        line for line in existing_lines[header_end_index:]
+        if not line.startswith(f"## [{version}]") and line != "## [Unreleased]"
+    ]
 
-final = preserved_header + [""] + body + remaining_log
-CHANGELOG_PATH.write_text("\n".join(final))
+    final = preserved_header + [""] + body + remaining_log
+    CHANGELOG_PATH.write_text("\n".join(final))
 
