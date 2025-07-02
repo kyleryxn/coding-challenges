@@ -23,10 +23,12 @@ jobs:
       - name: Bump version
         run: python bump_version.py ${{ github.event.inputs.bump }}
 
+      - name: Read bumped version
+        id: version
+        run: echo "version=$(cat version.txt | tr -d '\n')" >> $GITHUB_OUTPUT
+
       - name: Run changelog update
-        run: |
-          VERSION=$(cat version.txt | tr -d '\n')
-          python scripts/changelog/main.py release $VERSION
+        run: python scripts/changelog/main.py release ${{ steps.version.outputs.version }}
 
       - name: Commit and push changes
         run: |
@@ -40,7 +42,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.bump_version.outputs.new_version }}
-          name: Release v${{ steps.bump_version.outputs.new_version }}
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
