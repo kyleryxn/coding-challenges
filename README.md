@@ -17,6 +17,7 @@ Each folder contains:
 | Problem | Languages | Source(s) | Topic(s) |
 |---------|-----------|-----------|----------|
 | [Median Two Sorted Arrays](./challenges/median-two-sorted-arrays) | Java | LeetCode | Array, Binary Search, Divide and Conquer
+| [Ninja Words](./challenges/ninja-words) | Java | IBM | Array, Two Pointer
 | [Profit Targets](./challenges/profit-targets) | Java | Unknown | HashTable
 | [Triplets](./challenges/triplets) | Java | IBM | Array, Two Pointer
 | [Two Sum](./challenges/two-sum) | Java, Python | LeetCode | Array, HashTable
