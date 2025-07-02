@@ -5,7 +5,16 @@ from pathlib import Path
 changelog_path = Path("CHANGELOG.md")
 unreleased_header = "## [Unreleased]"
 
-# Use git diff-tree for last commit (reliable in CI)
+# Configurable list of tracked root folders or files
+# Use an empty list to track everything
+TRACKED_PATHS = []  # Empty means track all files
+
+def is_tracked(path):
+    if not TRACKED_PATHS:
+        return True  # Track everything
+    return any(path.startswith(p) for p in TRACKED_PATHS)
+
+# Use git diff-tree for current commit
 result = subprocess.run(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "HEAD"], capture_output=True, text=True)
 lines = result.stdout.strip().splitlines()
 
@@ -13,7 +22,7 @@ lines = result.stdout.strip().splitlines()
 print("Raw git diff-tree output:")
 print(result.stdout)
 
-# Initialize change categories
+# Initialize changelog categories
 categories = {
     "Added": [],
     "Changed": [],
@@ -31,7 +40,7 @@ for line in lines:
     if len(parts) != 2:
         continue
     status, path = parts
-    if not (path.startswith("challenges/") or path == "generate_readme.py"):
+    if not is_tracked(path):
         continue
     if status == "A":
         categories["Added"].append(path)
@@ -56,7 +65,7 @@ if unreleased_header not in content:
 
 lines = content.splitlines()
 
-# Ensure all section headers exist
+# Ensure each section exists
 def ensure_section(section):
     header = f"### {section}"
     if header not in lines:
@@ -67,7 +76,7 @@ def ensure_section(section):
 for section in categories:
     ensure_section(section)
 
-# Insert entries into the correct section
+# Insert entries into their respective sections
 def insert_entries(section, entries):
     header = f"### {section}"
     idx = lines.index(header) + 1
@@ -82,4 +91,4 @@ for section, entries in categories.items():
 
 # Save updated changelog
 changelog_path.write_text("\n".join(lines) + "\n")
-print("CHANGELOG.md updated with full Keep a Changelog sections.")
+print("CHANGELOG.md updated with categorized changes.")
