@@ -1,31 +1,31 @@
-from git_utils import get_changed_paths, get_commit_messages
-from meta_parser import parse_topics_from_meta
 from changelog_writer import write_changelog
+from git_utils import get_changed_files_and_messages
+from meta_parser import parse_meta_for_paths
 from version_utils import get_version
+import sys
+from datetime import date
+
 
 def main():
-    version = get_version()
-    changed_paths = get_changed_paths()
-    commit_messages = get_commit_messages()
+    args = sys.argv[1:]
 
-    print("Changed paths:")
-    for path in changed_paths:
-        print(f"- {path}")
+    # Determine version and mode
+    version = None
+    if args and args[0] == "release":
+        version = get_version()
+        version_str = f"[{version}] - {date.today()}"
+    else:
+        version_str = "[Unreleased]"
 
-    print("\nCommit messages:")
-    for msg in commit_messages:
-        print(f"- {msg}")
+    # Get changed files and messages
+    changes = get_changed_files_and_messages()
 
-    # Create a dictionary of changes per file with topic info (if available)
-    changes = []
-    for path in changed_paths:
-        topics = parse_topics_from_meta(path)
-        changes.append({
-            "file": path,
-            "topics": topics
-        })
+    # Parse metadata where applicable
+    enriched_changes = parse_meta_for_paths(changes)
 
-    write_changelog(version, changes, commit_messages)
+    # Write to the changelog
+    write_changelog(version_str, enriched_changes)
+
 
 if __name__ == "__main__":
     main()
