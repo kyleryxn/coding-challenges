@@ -21,4 +21,4 @@ Each folder contains:
 
 ## ✍️ License
 
-[MIT LICENSE](./LICENSE.txt)
+[MIT License](./LICENSE.txt)
