@@ -23,10 +23,10 @@ jobs:
       - name: Bump version
         run: python bump_version.py ${{ github.event.inputs.bump }}
 
-      - name: Update changelog with new version
+      - name: Run changelog update
         run: |
           VERSION=$(cat version.txt | tr -d '\n')
-          python update_changelog.py release $VERSION
+          python scripts/changelog/main.py release $VERSION
 
       - name: Commit and push changes
         run: |
