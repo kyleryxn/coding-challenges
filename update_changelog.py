@@ -94,3 +94,37 @@ else:
 # Write updated content
 changelog_path.write_text(updated + "\n")
 print("CHANGELOG.md updated, preserving previous sections.")
+
+
+# Optional: Function to move [Unreleased] to versioned section with today's date
+def release_unreleased(version: str):
+    today = datetime.today().strftime("%Y-%m-%d")
+    existing = changelog_path.read_text()
+
+    if "## [Unreleased]" not in existing:
+        print("No [Unreleased] section found.")
+        return
+
+    parts = existing.split("## [Unreleased]")
+    before = parts[0].rstrip()
+    rest = parts[1]
+
+    if "## [" in rest:
+        split_point = rest.find("## [", 1)
+        unreleased_body = rest[:split_point].strip()
+        after = rest[split_point:].lstrip()
+    else:
+        unreleased_body = rest.strip()
+        after = ""
+
+    release_header = f"## [{version}] - {today}"
+    new_section = f"{release_header}\n\n{unreleased_body}"
+
+    new_changelog = (
+        f"{before}\n\n## [Unreleased]\n\n"
+        f"{new_section}\n\n"
+        f"{after}"
+    )
+
+    changelog_path.write_text(new_changelog.strip() + "\n")
+    print(f"[Unreleased] moved to [{version}] dated {today}.")
