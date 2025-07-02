@@ -1,0 +1,38 @@
+name: Release from version.txt
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Read version and update changelog
+        run: |
+          VERSION=$(cat version.txt | tr -d '\n')
+          python update_changelog.py release $VERSION
+
+      - name: Commit and push changelog
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "Release version $(cat version.txt)" || echo "No changes"
+          git pull --rebase origin main || echo "No upstream changes"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

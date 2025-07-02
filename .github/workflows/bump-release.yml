@@ -1,0 +1,46 @@
+name: Semantic Versioned Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Bump type (major, minor, patch)"
+        required: true
+        default: "patch"
+
+jobs:
+  semantic-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bump version
+        run: python bump_version.py ${{ github.event.inputs.bump }}
+
+      - name: Update changelog with new version
+        run: |
+          VERSION=$(cat version.txt | tr -d '\n')
+          python update_changelog.py release $VERSION
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add version.txt CHANGELOG.md
+          git commit -m "Release v$(cat version.txt)" || echo "No changes"
+          git pull --rebase origin main || echo "No upstream changes"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.bump_version.outputs.new_version }}
+          name: Release v${{ steps.bump_version.outputs.new_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
