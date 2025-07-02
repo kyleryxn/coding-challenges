@@ -1,38 +1,65 @@
-from pathlib import Path
-from git_utils import get_changed_paths, get_commit_message
-from changelog_writer import write_changelog
-from meta_parser import get_changelog_note
+import sys
+from datetime import datetime
+from git_utils import get_changed_files_and_messages
+from changelog_writer import update_changelog
+from meta_parser import extract_meta_info
+from version_utils import get_version
 
-VERSION_PATH = Path("version.txt")
 
-def get_version():
-    return VERSION_PATH.read_text().strip()
+def categorize_change(file_path: str, message: str) -> str:
+    """Categorize the change based on path or message content."""
+    lower_msg = message.lower()
+    lower_path = file_path.lower()
 
-def classify(path):
-    parts = Path(path).parts
-    return "added" if parts[0] == "challenges" and len(parts) == 2 else "changed"
+    if "delete" in lower_msg or "remove" in lower_msg:
+        return "removed"
+    elif "add" in lower_msg or "initial" in lower_msg:
+        return "added"
+    elif "fix" in lower_msg or "bug" in lower_msg:
+        return "fixed"
+    elif "refactor" in lower_msg:
+        return "changed"
+    else:
+        # Use location as a fallback
+        if "challenges/" in lower_path:
+            return "changed"
+        return "changed"
+
 
 def main():
-    version = get_version()
-    changes = {"added": [], "changed": []}
-    seen = set()
+    args = sys.argv[1:]
+    mode = args[0] if args else "unreleased"
+    version = args[1] if len(args) > 1 else get_version()
+    date = datetime.today().strftime("%Y-%m-%d")
 
-    for path in get_changed_paths():
-        base = str(Path(path).parent if Path(path).is_file() else path)
-        if base in seen:
-            continue
-        seen.add(base)
+    file_to_message = get_changed_files_and_messages()
 
-        note = get_changelog_note(base) or get_commit_message(path)
-        entry = f"- `{base}`" + (f": {note}" if note else "")
-        change_type = classify(path)
-        changes[change_type].append(entry)
+    changes = {
+        "added": [],
+        "changed": [],
+        "removed": [],
+        "fixed": [],
+        "deprecated": [],
+        "security": []
+    }
 
-    if changes["added"] or changes["changed"]:
-        write_changelog(version, changes)
-        print("CHANGELOG.md updated.")
-    else:
-        print("No relevant changes to log.")
+    for file_path, message in file_to_message.items():
+        category = categorize_change(file_path, message)
+        entry = f"- `{file_path}`: {message}"
+
+        # Optional: enrich with topic metadata
+        if file_path.startswith("challenges/"):
+            meta_info = extract_meta_info(file_path)
+            if meta_info:
+                entry += f" _(Topics: {', '.join(meta_info['topics'])})_"
+
+        if category in changes:
+            changes[category].append(entry)
+        else:
+            changes["changed"].append(entry)
+
+    update_changelog(version, date, changes, mode)
+
 
 if __name__ == "__main__":
     main()
