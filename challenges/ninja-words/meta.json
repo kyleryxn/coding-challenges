@@ -1,0 +1,6 @@
+{
+    "source": "IBM",
+    "difficulty": "Medium",
+    "topics": ["Array", "Two Pointer"],
+    "changelog_note": "Initial Java solution added"
+}
