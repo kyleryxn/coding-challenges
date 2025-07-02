@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.1] - 2025-07-02
 
 ### Changed
+- `.github/workflows`: Fixed location of correct python script tp update CHANGELOG.md
+- `.`: Fixed location of correct python script tp update CHANGELOG.md
+- `challenges/median-two-sorted-arrays`: Fixed location of correct python script tp update CHANGELOG.md
+- `challenges/ninja-words`: Initial Java solution added
+- `challenges/profit-targets`: Fixed location of correct python script tp update CHANGELOG.md
+- `challenges/triplets`: Fixed location of correct python script tp update CHANGELOG.md
+- `challenges/two-sum`: Fixed location of correct python script tp update CHANGELOG.md
+- `challenges/wikipedia-article`: Fixed location of correct python script tp update CHANGELOG.md
+- `scripts/changelog`: Fixed location of correct python script tp update CHANGELOG.md
+
+
+## [0.2.1] - 2025-07-02
+
+### Changed
 - `.github/workflows`: Added Ninja Word challenge solution
 - `.`: Added Ninja Word challenge solution
 - `challenges/median-two-sorted-arrays`: Added Ninja Word challenge solution
