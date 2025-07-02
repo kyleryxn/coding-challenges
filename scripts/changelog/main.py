@@ -42,12 +42,25 @@ def group_changes_by_type(changes: dict[str, str]) -> dict[str, list[str]]:
 
 def main(mode="unreleased"):
     version = get_version()
-    date = datetime.now().strftime("%Y-%m-%d")
+    date = datetime.today().strftime("%Y-%m-%d")
+
     changes = get_changed_files_and_messages()
+    if not changes:
+        print("No relevant file changes detected.")
+        return
+
     grouped = group_changes_by_type(changes)
+
+    print("Changes grouped by type:")
+    for k, v in grouped.items():
+        if v:
+            print(f"\n### {k.upper()}")
+            for entry in v:
+                print(entry)
+
     write_changelog(version, date, grouped, mode)
 
 if __name__ == "__main__":
     import sys
-    mode = sys.argv[1] if len(sys.argv) > 1 else "unreleased"
-    main(mode)
+    arg = sys.argv[1] if len(sys.argv) > 1 else "unreleased"
+    main(arg)

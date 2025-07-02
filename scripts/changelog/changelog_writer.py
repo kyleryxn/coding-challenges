@@ -2,6 +2,17 @@ from pathlib import Path
 
 CHANGELOG_PATH = Path("CHANGELOG.md")
 
+def remove_existing_sections(lines, version):
+    cleaned = []
+    skip = False
+    for line in lines:
+        if line.startswith(f"## [{version}]") or line.startswith("## [Unreleased]"):
+            skip = True
+        elif line.startswith("## "):  # next section starts
+            skip = False
+        if not skip:
+            cleaned.append(line)
+    return cleaned
 
 def write_changelog(version: str, date: str, changes: dict, mode: str = "unreleased"):
     if CHANGELOG_PATH.exists():
@@ -34,19 +45,11 @@ def write_changelog(version: str, date: str, changes: dict, mode: str = "unrelea
 
     body.append("")
 
-    # Preserve the header and any pre-existing entries
-    header_end_index = 0
-    for i, line in enumerate(existing_lines):
-        if line.startswith("## "):
-            header_end_index = i
-            break
+    cleaned_lines = remove_existing_sections(existing_lines, version)
 
-    preserved_header = existing_lines[:header_end_index]
-    remaining_log = [
-        line for line in existing_lines[header_end_index:]
-        if not line.startswith(f"## [{version}]") and line != "## [Unreleased]"
-    ]
+    # Only add header once
+    if cleaned_lines[:len(header)] != header:
+        cleaned_lines = header + [""] + cleaned_lines
 
-    final = preserved_header + [""] + body + remaining_log
+    final = cleaned_lines[:len(header)] + body + cleaned_lines[len(header):]
     CHANGELOG_PATH.write_text("\n".join(final))
-
