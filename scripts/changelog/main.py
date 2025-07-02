@@ -2,12 +2,11 @@ import sys
 from datetime import datetime
 from git_utils import get_changed_files_and_messages
 from changelog_writer import write_changelog
-from meta_parser import extract_meta_info
+from meta_parser import parse_topics_from_meta
 from version_utils import get_version
 
 
 def categorize_change(file_path: str, message: str) -> str:
-    """Categorize the change based on path or message content."""
     lower_msg = message.lower()
     lower_path = file_path.lower()
 
@@ -19,8 +18,11 @@ def categorize_change(file_path: str, message: str) -> str:
         return "fixed"
     elif "refactor" in lower_msg:
         return "changed"
+    elif "security" in lower_msg:
+        return "security"
+    elif "deprecate" in lower_msg:
+        return "deprecated"
     else:
-        # Use location as a fallback
         if "challenges/" in lower_path:
             return "changed"
         return "changed"
@@ -47,18 +49,14 @@ def main():
         category = categorize_change(file_path, message)
         entry = f"- `{file_path}`: {message}"
 
-        # Optional: enrich with topic metadata
         if file_path.startswith("challenges/"):
-            meta_info = extract_meta_info(file_path)
-            if meta_info:
-                entry += f" _(Topics: {', '.join(meta_info['topics'])})_"
+            topics = parse_topics_from_meta(file_path)
+            if topics:
+                entry += f" _(Topics: {', '.join(topics)})_"
 
-        if category in changes:
-            changes[category].append(entry)
-        else:
-            changes["changed"].append(entry)
+        changes[category].append(entry)
 
-    update_changelog(version, date, changes, mode)
+    write_changelog(version, date, changes, mode)
 
 
 if __name__ == "__main__":

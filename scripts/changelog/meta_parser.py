@@ -1,12 +1,19 @@
 import json
 from pathlib import Path
 
-def get_changelog_note(folder_path):
-    meta_file = Path(folder_path) / "meta.json"
-    if meta_file.exists():
+
+def parse_topics_from_meta(file_path: str):
+    parts = Path(file_path).parts
+    if len(parts) < 2 or parts[0] != "challenges":
+        return []
+
+    challenge_dir = Path("challenges") / parts[1]
+    meta_path = challenge_dir / "meta.json"
+    if meta_path.exists():
         try:
-            with open(meta_file) as f:
-                return json.load(f).get("changelog_note", "")
-        except json.JSONDecodeError:
-            return ""
-    return ""
+            with open(meta_path, "r") as f:
+                meta = json.load(f)
+            return meta.get("topics", [])
+        except Exception:
+            return []
+    return []
