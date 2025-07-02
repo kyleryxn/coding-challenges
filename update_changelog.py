@@ -1,24 +1,22 @@
 from datetime import datetime
 import subprocess
 from pathlib import Path
+import re
 
 changelog_path = Path("CHANGELOG.md")
 unreleased_header = "## [Unreleased]"
 
-# Configurable list of tracked root folders or files
-# Use an empty list to track everything
-TRACKED_PATHS = []  # Empty means track all files
+# Configurable list of tracked paths — empty = track all
+TRACKED_PATHS = []
 
 def is_tracked(path):
     if not TRACKED_PATHS:
-        return True  # Track everything
+        return True
     return any(path.startswith(p) for p in TRACKED_PATHS)
 
-# Use git diff-tree for current commit
+# Get file changes in the latest commit
 result = subprocess.run(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "HEAD"], capture_output=True, text=True)
 lines = result.stdout.strip().splitlines()
-
-# Debug output
 print("Raw git diff-tree output:")
 print(result.stdout)
 
@@ -57,38 +55,25 @@ if not any(categories.values()):
 if not changelog_path.exists():
     changelog_path.write_text("# Changelog\n\nAll notable changes to this project will be documented in this file.\n\n")
 
-content = changelog_path.read_text()
+existing = changelog_path.read_text()
 
-# Ensure [Unreleased] section exists
-if unreleased_header not in content:
-    content += f"\n{unreleased_header}\n"
-
-lines = content.splitlines()
-
-# Ensure each section exists
-def ensure_section(section):
-    header = f"### {section}"
-    if header not in lines:
-        idx = lines.index(unreleased_header) + 1
-        lines.insert(idx, "")
-        lines.insert(idx + 1, header)
-
-for section in categories:
-    ensure_section(section)
-
-# Insert entries into their respective sections
-def insert_entries(section, entries):
-    header = f"### {section}"
-    idx = lines.index(header) + 1
-    for entry in entries:
-        formatted = f"- `{entry}`"
-        if formatted not in lines:
-            lines.insert(idx, formatted)
-            idx += 1
-
+# Generate new Unreleased content
+new_unreleased_lines = [unreleased_header]
 for section, entries in categories.items():
-    insert_entries(section, entries)
+    if entries:
+        new_unreleased_lines.append("")
+        new_unreleased_lines.append(f"### {section}")
+        for entry in entries:
+            new_unreleased_lines.append(f"- `{entry}`")
+new_unreleased = "\n".join(new_unreleased_lines) + "\n"
 
-# Save updated changelog
-changelog_path.write_text("\n".join(lines) + "\n")
-print("CHANGELOG.md updated with categorized changes.")
+# Replace or insert [Unreleased] section
+if unreleased_header in existing:
+    pattern = r"## \[Unreleased\](.*?)(?=\n## \[|\Z)"  # non-greedy match until next release or end
+    updated = re.sub(pattern, new_unreleased.strip(), existing, flags=re.DOTALL)
+else:
+    insert_point = existing.find("# Changelog") + len("# Changelog")
+    updated = existing[:insert_point] + "\n\n" + new_unreleased + "\n" + existing[insert_point:]
+
+changelog_path.write_text(updated)
+print("CHANGELOG.md updated while preserving previous releases.")
