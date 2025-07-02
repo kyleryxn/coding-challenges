@@ -66,7 +66,7 @@ Each folder contains:
 |---------|-----------|-----------|----------|
 {chr(10).join(index_entries)}
 
-## ✍️ License
+## 📃 License
 
 [MIT License](./LICENSE.txt)
 """
