@@ -57,4 +57,6 @@ public class WikipediaArticle {
 
         return count;
     }
+
+    // this is a test comment
 }
