@@ -1,31 +1,53 @@
-from changelog_writer import write_changelog
-from git_utils import get_changed_files_and_messages
-from meta_parser import parse_meta_for_paths
+# scripts/changelog/main.py
+
+from datetime import datetime
 from version_utils import get_version
-import sys
-from datetime import date
+from git_utils import get_changed_files_and_messages
+from meta_parser import parse_topics_from_meta
+from changelog_writer import write_changelog
 
+def group_changes_by_type(changes: dict[str, str]) -> dict[str, list[str]]:
+    grouped = {
+        "added": [],
+        "changed": [],
+        "removed": [],
+        "fixed": [],
+        "deprecated": [],
+        "security": []
+    }
 
-def main():
-    args = sys.argv[1:]
+    for path, message in changes.items():
+        lower_msg = message.lower()
+        entry = f"- `{path}`: {message}"
 
-    # Determine version and mode
-    version = None
-    if args and args[0] == "release":
-        version = get_version()
-        version_str = f"[{version}] - {date.today()}"
-    else:
-        version_str = "[Unreleased]"
+        # Only add topics if it's a challenge file
+        topics = parse_topics_from_meta(path)
+        if topics:
+            entry += f" _(Topics: {', '.join(topics)})_"
 
-    # Get changed files and messages
+        if any(keyword in lower_msg for keyword in ["fix", "bug"]):
+            grouped["fixed"].append(entry)
+        elif any(keyword in lower_msg for keyword in ["remove", "delete"]):
+            grouped["removed"].append(entry)
+        elif any(keyword in lower_msg for keyword in ["add", "initial"]):
+            grouped["added"].append(entry)
+        elif any(keyword in lower_msg for keyword in ["deprecate"]):
+            grouped["deprecated"].append(entry)
+        elif any(keyword in lower_msg for keyword in ["security", "vulnerability"]):
+            grouped["security"].append(entry)
+        else:
+            grouped["changed"].append(entry)
+
+    return grouped
+
+def main(mode="unreleased"):
+    version = get_version()
+    date = datetime.now().strftime("%Y-%m-%d")
     changes = get_changed_files_and_messages()
-
-    # Parse metadata where applicable
-    enriched_changes = parse_meta_for_paths(changes)
-
-    # Write to the changelog
-    write_changelog(version_str, enriched_changes)
-
+    grouped = group_changes_by_type(changes)
+    write_changelog(version, date, grouped, mode)
 
 if __name__ == "__main__":
-    main()
+    import sys
+    mode = sys.argv[1] if len(sys.argv) > 1 else "unreleased"
+    main(mode)
