@@ -5,9 +5,13 @@ from pathlib import Path
 changelog_path = Path("CHANGELOG.md")
 unreleased_header = "## [Unreleased]"
 
-# Run git diff to get status and filenames
-result = subprocess.run(["git", "diff", "--name-status", "origin/main"], capture_output=True, text=True)
+# Use git diff-tree for last commit (reliable in CI)
+result = subprocess.run(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "HEAD"], capture_output=True, text=True)
 lines = result.stdout.strip().splitlines()
+
+# Debug output
+print("Raw git diff-tree output:")
+print(result.stdout)
 
 # Initialize change categories
 categories = {
@@ -19,21 +23,23 @@ categories = {
     "Security": []
 }
 
-# Classify changes based on status
+# Classify changes
 for line in lines:
-    status, path = line.split(maxsplit=1)
+    if not line.strip():
+        continue
+    parts = line.split(maxsplit=1)
+    if len(parts) != 2:
+        continue
+    status, path = parts
     if not (path.startswith("challenges/") or path == "generate_readme.py"):
         continue
-
     if status == "A":
         categories["Added"].append(path)
     elif status == "M":
         categories["Changed"].append(path)
     elif status == "D":
         categories["Removed"].append(path)
-    # You could implement rules here to classify Fixed, Deprecated, Security
 
-# Check if any changes exist
 if not any(categories.values()):
     print("No relevant changes to log.")
     exit(0)
