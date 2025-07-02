@@ -8,8 +8,8 @@ Given the array of profits, find the number of distinct pairs of stocks where th
 
 **Input:**
 
-> `stocksProfit = [5, 7, 9, 13, 11, 6, 6, 3, 3]`<br>
-> `target = 12`
+> `target = 12`<br>
+> `stocksProfit = [5, 7, 9, 13, 11, 6, 6, 3, 3]`
 
 **Explanation:**
 - There are **4 pairs of stocks** that have the sum of their profits equal to the target `12`.  
