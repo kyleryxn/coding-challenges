@@ -30,4 +30,5 @@ jobs:
         git config --global user.email "github-actions@github.com"
         git add CHANGELOG.md
         git commit -m "Auto-update CHANGELOG.md" || echo "No changes to commit"
+        git pull --rebase origin main
         git push
