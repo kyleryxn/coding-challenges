@@ -1,5 +1,5 @@
 {
-    "source": ["IBM", "HackerRank"],
+    "source": "IBM",
     "difficulty": "Medium",
     "topics": ["Arrays", "Two Pointer"]
 }
