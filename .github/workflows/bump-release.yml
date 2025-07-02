@@ -35,7 +35,7 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add version.txt CHANGELOG.md
-          git commit -m "Release v$(cat version.txt)" || echo "No changes"
+          git commit -m "Bumped to release v$(cat version.txt)" || echo "No changes"
           git pull --rebase origin main || echo "No upstream changes"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
 
