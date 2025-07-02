@@ -20,3 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `update_changelog.py`
 
 ### Added
+- `challenges/profit-targets/README.md`
+- `challenges/profit-targets/meta.json`
+- `challenges/profit-targets/solution.java`
