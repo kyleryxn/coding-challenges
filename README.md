@@ -19,6 +19,6 @@ Each folder contains:
 | [Median Two Sorted Arrays](./challenges/median-two-sorted-arrays) | Java | LeetCode | Array, Binary Search, Divide and Conquer
 | [Two Sum](./challenges/two-sum) | Java, Python | LeetCode | Array, HashTable
 
-## ✍️ License
+## 📃 License
 
 [MIT License](./LICENSE.txt)
