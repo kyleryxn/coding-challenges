@@ -25,10 +25,12 @@ jobs:
       run: python update_changelog.py
 
     - name: Commit and Push Changelog
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
         git add CHANGELOG.md
         git commit -m "Auto-update CHANGELOG.md" || echo "No changes to commit"
-        git pull --rebase origin main
-        git push
+        git pull --rebase origin main || echo "No upstream changes"
+        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
