@@ -53,7 +53,7 @@ def update_unreleased_section():
         if entries:
             new_lines.append("")
             new_lines.append(f"### {section}")
-            for entry in entries:
+            for entry in sorted(entries):
                 new_lines.append(f"- `{entry}`")
     block = "\n".join(new_lines) + "\n"
 
@@ -119,11 +119,10 @@ def release_unreleased(version: str):
 def show_help():
     print("""Usage:
   python update_changelog.py                # Update [Unreleased] section from latest commit
-  python update_changelog.py release 1.0.0  # Promote [Unreleased] to versioned release
+  python update_changelog.py release 1.2.0  # Promote [Unreleased] to versioned release
   python update_changelog.py help           # Show this help message
 """)
 
-# CLI entrypoint
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         update_unreleased_section()
