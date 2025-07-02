@@ -1,7 +1,7 @@
 import sys
 from datetime import datetime
 from git_utils import get_changed_files_and_messages
-from changelog_writer import update_changelog
+from changelog_writer import write_changelog
 from meta_parser import extract_meta_info
 from version_utils import get_version
 
